@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import Logo from "./Logo";
 
 
 function SignUpPage() {
-  const [password_1, setPassword_1] = useState("");
-  const [password_2, setPassword_2] = useState("");
+  const [password, setPassword] = useState("");
   const { register, handleSubmit, formState: { errors }} = useForm();
 
   const onSubmitEvent = ({email, nickname, password}) => {
@@ -18,11 +17,9 @@ function SignUpPage() {
       })
     })
       .then(res => res.json())
-      .then(result => alert(`${result.message} ${result.error}`))
+      .then(result => alert(`${result.message} ${ result.error ?? ""}`))
       .catch(err => alert(err));
   };
-
-  console.log(password_1===password_2)
 
   return (
     <div id="signUpPage" className="bg-yellow">
@@ -76,8 +73,9 @@ function SignUpPage() {
               name="pwd"
               id="pwd"
               placeholder="請輸入密碼"
+              value={password}
               {...register("password", {
-                onChange: (e) => setPassword_1(e.target.value),
+                onChange: (e) => setPassword(e.target.value),
                 required: { value: true, message: "此欄位必填" },
                 minLength: { value: 6, message: "密碼至少為 6 碼" },
               })}
@@ -92,12 +90,11 @@ function SignUpPage() {
               name="pwd2"
               id="pwd2"
               placeholder="請再次輸入密碼"
-              {...register("password2", {
-                onChange: (e) => setPassword_2(e.target.value),
-                validate: (password_1 === password_2) || "密碼不一致" 
+              {...register("check", {
+                validate: (e) => e === password,
               })}
             />
-            <span>{console.log(errors)}</span>
+            <span>{errors.check && errors.check.type === "validate" && "密碼不一致"}</span>
             <input
               className="formControls_btnSubmit"
               type="submit"
