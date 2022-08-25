@@ -1,13 +1,19 @@
 import './App.css';
-import { Route, Routes } from 'react-router-dom';
-import LoginPage from './components/LoginPage';
-import SignUpPage from './components/SignUpPage';
-import TodoPage from './components/TodoPage';
+import { Route, Routes, HashRouter } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
+import TodoPage from './pages/TodoPage';
 
 function App() {
   return (
     <div className="App">
-      <SignUpPage />
+      <HashRouter>
+        <Routes>
+          <Route index element={<LoginPage />}/>
+          <Route path='/signup' element={<SignUpPage />}/>
+          <Route path='/todo' element={<TodoPage />}/>
+        </Routes>
+      </HashRouter>
     </div>
   );
 }
