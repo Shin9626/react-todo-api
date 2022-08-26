@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
+import TodoNav from "../component/TodoNav";
 
 function TodoPage() {
   const navigate = useNavigate();
@@ -19,21 +20,7 @@ function TodoPage() {
   }
   return (
     <div id="todoListPage" className="bg-half">
-      <nav>
-        <h1>
-          <a href="javascript:void(0)">ONLINE TODO LIST</a>
-        </h1>
-        <ul>
-          <li className="todo_sm">
-            <a href="javascript:void(0)">
-              <span>{user.nickname} 的代辦</span>
-            </a>
-          </li>
-          <li>
-            <a href="#" onClick={ e => handleLogOut(e)}>登出</a>
-          </li>
-        </ul>
-      </nav>
+      <TodoNav nickname={user.nickname} handleLogOut={handleLogOut}/>
       <div className="conatiner todoListPage vhContainer">
         <div className="todoList_Content">
           <div className="inputBox">
