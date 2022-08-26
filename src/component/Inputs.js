@@ -1,9 +1,10 @@
-import { useContext } from "react";
-import { DataContext } from "../pages/SignUpPage";
+import { useState } from 'react';
+import { useFormContext } from '../context/FormContext';
 
 const Inputs = {
 
-  Email: ({ register, errors }) => {
+  Email: () => {
+    const { register, errors } = useFormContext();
     return (
       <>
         <label className="formControls_label" htmlFor="email">
@@ -27,7 +28,10 @@ const Inputs = {
       </>
     )
   },
-  LogInPassword: ({ register, errors }) => {
+  Password: () => {
+    const [password, setPassword] = useState("");
+    const { register, errors } = useFormContext();
+
     return (
       <>
         <label className="formControls_label" htmlFor="pwd">
@@ -38,30 +42,8 @@ const Inputs = {
           type="password"
           name="pwd"
           id="pwd"
-          placeholder="請輸入密碼"
-          {...register("password", {
-            required: { value: true, message: "此欄位必填" },
-            minLength: { value: 6, message: "密碼至少為 6 碼" },
-          })}
-        />
-        <span>{errors.password?.message}</span>
-      </>
-    )
-  },
-  SignUpPassword: ({ register, errors }) => {
-    const { password, setPassword } = useContext(DataContext);
-    return (
-      <>
-        <label className="formControls_label" htmlFor="pwd">
-          密碼
-        </label>
-        <input
-          className="formControls_input"
-          type="password"
-          name="pwd"
-          id="pwd"
-          placeholder="請輸入密碼"
           value={password}
+          placeholder="請輸入密碼"
           {...register("password", {
             onChange: (e) => setPassword(e.target.value),
             required: { value: true, message: "此欄位必填" },
@@ -72,8 +54,9 @@ const Inputs = {
       </>
     )
   },
-  Check: ({ register, errors } ) => {
-    const { password } = useContext(DataContext)
+  Check: ( ) => {
+    const { register, errors } = useFormContext();
+
     return (
       <>
         <label className="formControls_label" htmlFor="pwd">
@@ -86,14 +69,15 @@ const Inputs = {
           id="pwd2"
           placeholder="請再次輸入密碼"
           {...register("check", {
-            validate: (e) =>  e === password ,
+            validate: (e) =>  e === document.querySelector('#pwd').value ,
           })}
         />
         <span>{errors.check && errors.check.type === "validate" && "密碼不一致"}</span>
       </>
     )
   },
-  Nickname: ({ register, errors } ) => {
+  Nickname: ( ) => {
+    const { register, errors } = useFormContext();
     return (
       <>
         <label className="formControls_label" htmlFor="name">

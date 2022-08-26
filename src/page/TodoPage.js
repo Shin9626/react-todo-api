@@ -1,23 +1,36 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from '../context/AuthContext';
 
 function TodoPage() {
-  const handleLogOut = () => {
-    
+  const navigate = useNavigate();
+  const { token, setToken, user, setUser } = useAuth();
+
+  useEffect(()=>{
+    if(!token) {
+      setUser({});
+      navigate('/');
+    }
+  }, [token])
+
+  const handleLogOut = (e) => {
+    e.preventDefault();
+    setToken(null);
   }
   return (
     <div id="todoListPage" className="bg-half">
       <nav>
         <h1>
-          <a href="#">ONLINE TODO LIST</a>
+          <a href="javascript:void(0)">ONLINE TODO LIST</a>
         </h1>
         <ul>
           <li className="todo_sm">
-            <a href="#">
-              <span>王小明的代辦</span>
+            <a href="javascript:void(0)">
+              <span>{user.nickname} 的代辦</span>
             </a>
           </li>
           <li>
-            <a onClick={handleLogOut}>登出</a>
+            <a href="#" onClick={ e => handleLogOut(e)}>登出</a>
           </li>
         </ul>
       </nav>
