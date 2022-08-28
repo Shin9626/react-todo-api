@@ -1,70 +1,51 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from '../context/AuthContext';
 import TodoNav from "../component/TodoNav";
+import TodoAdd from "../component/TodoAdd"
+import List from "../component/List";
 
 function TodoPage() {
   const navigate = useNavigate();
-  const { token, setToken, user, setUser } = useAuth();
-
-  useEffect(()=>{
-    if(!token) {
-      setUser({});
-      navigate('/');
-    }
-  }, [token])
+  const [ list, setList ] = useState([]);
+  const { token, setToken } = useAuth();
+  const user = JSON.parse(window.localStorage.getItem('user'));
+  console.log(list)
+  const getList = async () => {
+    await fetch('https://todoo.5xcamp.us/todos', {
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        'authorization': token || user?.auth,
+      })
+    })
+      .then(res => res.json())
+      .then(result => setList(result.todos))
+      .catch(err => console.log(err.toString()));
+  }
 
   const handleLogOut = (e) => {
     e.preventDefault();
     setToken(null);
+    window.localStorage.clear();
+    navigate('/');
   }
+
+  useEffect(() => {
+    if(!token && !user) {
+      navigate('../');
+    } else {
+      getList();
+    }
+  }, []);
+
   return (
     <div id="todoListPage" className="bg-half">
-      <TodoNav nickname={user.nickname} handleLogOut={handleLogOut}/>
+      <TodoNav nickname={user?.nickname} handleLogOut={handleLogOut}/>
       <div className="conatiner todoListPage vhContainer">
         <div className="todoList_Content">
-          <div className="inputBox">
-            <input type="text" placeholder="請輸入待辦事項" />
-            <a href="#">
-              <i className="fa fa-plus" />
-            </a>
-          </div>
-          <div className="todoList_list">
-            <ul className="todoList_tab">
-              <li>
-                <a href="#" className="active">
-                  全部
-                </a>
-              </li>
-              <li>
-                <a href="#">待完成</a>
-              </li>
-              <li>
-                <a href="#">已完成</a>
-              </li>
-            </ul>
-            <div className="todoList_items">
-              <ul className="todoList_item">
-                <li>
-                  <label className="todoList_label">
-                    <input
-                      className="todoList_input"
-                      type="checkbox"
-                      value="true"
-                    />
-                    <span>把冰箱發霉的檸檬拿去丟</span>
-                  </label>
-                  <a href="#">
-                    <i className="fa fa-times" />
-                  </a>
-                </li>
-              </ul>
-              <div className="todoList_statistics">
-                <p> 5 個已完成項目</p>
-                <a href="#">清除已完成項目</a>
-              </div>
-            </div>
-          </div>
+          <TodoAdd getList={getList}/>     
+          <List list={list} setList={setList} getList={getList}/>
         </div>
       </div>
     </div>

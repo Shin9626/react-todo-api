@@ -9,18 +9,19 @@ import { FormContext } from './context/FormContext';
 import { AuthContext } from './context/AuthContext';
 
 function App() {
-  const [user, setUser] = useState({});
   const [token, setToken] = useState("");
   const { register, handleSubmit, formState: { errors }} = useForm();
   return (
     <div className="App">
       <FormContext.Provider value={{ register, handleSubmit, errors }}>
-      <AuthContext.Provider value={{ token, setToken, user, setUser }}>
+      <AuthContext.Provider value={{ token, setToken }}>
         <HashRouter>
           <Routes>
             <Route index element={<LoginPage />}/>
             <Route path='/signup' element={<SignUpPage />}/>
-            <Route path='/todo' element={<TodoPage />}/>
+            <Route path='/todo' element={<TodoPage />}>
+              <Route path=':id' element={<TodoPage />}/>
+            </Route>
           </Routes>
         </HashRouter>
       </AuthContext.Provider>

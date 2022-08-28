@@ -10,19 +10,19 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 function LoginPage() {
-  const { token, setToken, setUser } = useAuth();
+  const { setToken } = useAuth();
   const { handleSubmit } = useFormContext();
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    if(window.localStorage.getItem('user')) navigate('todo');
+  }, [])
 
-  useEffect(()=>{
-    if(token) {
-      navigate('/todo');
-    }
-  }, [token])
-
-  const onSubmitEvent = ({ email, password }) => {
-    const loginData = { user: { email, password }}
-    fetch('https://todoo.5xcamp.us/users/sign_in', {
+  const onSubmitEvent = async ({ email, password }) => {
+    const user = { email, password };
+    const loginData = { user }
+    
+    await fetch('https://todoo.5xcamp.us/users/sign_in', {
         method: 'POST',
         body: JSON.stringify(loginData),
         headers: new Headers({
@@ -30,35 +30,37 @@ function LoginPage() {
       })
     })
       .then(res => {
-        if(res.status === 401) {    
-          MySwal.fire(
-            '登入失敗',
-            'Email 或帳號輸入有誤',
-            'error',
-          )
-          return res.json();
+        if(res.status === 200) {
+          const auth = res.headers.get("authorization");
+          setToken(auth);
+          user.auth = auth;
         }
-
-        MySwal.fire({
-          position: 'center',
-          icon: 'success',
-          title: '登入成功',
-          showConfirmButton: false,
-          timer: 1250
-        })
-          .then(() => {
-            setToken(res.headers.get("authorization"));
-            navigate('/todo');
-          });
-
         return res.json();
-      }).then((result) => {
-        const { email, nickname } = result;
-        setUser({ email, nickname });
+      })
+        .then((result) => {
+          if(result.message === '登入成功') {    
+            MySwal.fire({
+              position: 'center',
+              icon: 'success',
+              title: '登入成功',
+              showConfirmButton: false,
+              timer: 1250
+            })
+              .then(() => {
+                user.nickname =  result.nickname;
+                window.localStorage.setItem('user', JSON.stringify(user));
+                navigate(`/todo/${result.nickname}`);
+              })
+          } else {
+            MySwal.fire(
+              '登入失敗',
+              'Email 或帳號輸入有誤',
+              'error',
+            )    
+          }         
       })
         .catch(err => {
           console.log(err);
-          return MySwal.fire({ title: err.message, }) 
         });
   };
 
