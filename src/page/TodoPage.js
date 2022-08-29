@@ -10,7 +10,7 @@ function TodoPage() {
   const [ list, setList ] = useState([]);
   const { token, setToken } = useAuth();
   const user = JSON.parse(window.localStorage.getItem('user'));
-  console.log(list)
+
   const getList = async () => {
     await fetch('https://todoo.5xcamp.us/todos', {
       method: 'GET',
@@ -45,7 +45,7 @@ function TodoPage() {
       <div className="conatiner todoListPage vhContainer">
         <div className="todoList_Content">
           <TodoAdd getList={getList}/>     
-          <List list={list} setList={setList} getList={getList}/>
+          <List list={list} getList={getList}/>
         </div>
       </div>
     </div>

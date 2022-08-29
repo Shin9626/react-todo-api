@@ -2,11 +2,11 @@ function TodoNav ({nickname, handleLogOut}) {
     return (
       <nav>
         <h1>
-          <a href="javascript:void(0)">ONLINE TODO LIST</a>
+          <a href="/">ONLINE TODO LIST</a>
         </h1>
           <ul>
             <li className="todo_sm">
-              <a href="javascript:void(0)">
+              <a href="/">
               <span>{nickname} 的代辦</span>
               </a>
             </li>

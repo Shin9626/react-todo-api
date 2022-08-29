@@ -10,11 +10,12 @@ const MySwal = withReactContent(Swal);
 
 function SignUpPage() {
   const navigate = useNavigate();
-  const { setToken, setUser } = useAuth();
+  const { setToken } = useAuth();
   const { handleSubmit } = useFormContext();
   
   const onSubmitEvent = ({ email, nickname, password }) => {
     const regData = { user: { email, nickname, password }}
+    const user = {};
     fetch('https://todoo.5xcamp.us/users', {
         method: 'POST',
         body: JSON.stringify(regData),
@@ -24,7 +25,9 @@ function SignUpPage() {
     })
       .then(res => {
         if(res.status === 201) {
-          setToken(res.headers.get("authorization"));
+          const auth = res.headers.get("authorization");
+          setToken(auth);
+          user.auth = auth;
         }
         return res.json();
       })
@@ -37,8 +40,8 @@ function SignUpPage() {
         })
           .then(() => {
             if(!result.error) {
-              const { email, nickname } = result;
-              setUser({ email, nickname });
+              user.nickname =  result.nickname;
+              window.localStorage.setItem('user', JSON.stringify(user));
               navigate('/todo');
             }
           });

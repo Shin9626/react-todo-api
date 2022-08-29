@@ -19,8 +19,8 @@ function LoginPage() {
   }, [])
 
   const onSubmitEvent = async ({ email, password }) => {
-    const user = { email, password };
-    const loginData = { user }
+    const loginData = { user: {  email, password }}
+    const user = {};
     
     await fetch('https://todoo.5xcamp.us/users/sign_in', {
         method: 'POST',
