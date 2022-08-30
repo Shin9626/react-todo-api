@@ -11,8 +11,9 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 function LoginPage() {
-  const { token, setToken, localUser } = useAuth();
+  const { token, setToken} = useAuth();
   const navigate = useNavigate();
+  const user = JSON.parse(window.localStorage.getItem('user'));
   const {
     register,
     handleSubmit,
@@ -21,8 +22,8 @@ function LoginPage() {
   } = useForm();
 
   useEffect(() => {
-    if (localUser || token) navigate('todo');
-  }, [token, localUser, navigate]);
+    if (token || user ) navigate('todo');
+  }, []);
 
   const onSubmitEvent = async ({ email, password }) => {
     const loginData = { user: { email, password } };
@@ -54,8 +55,8 @@ function LoginPage() {
           }).then(() => {
             user.nickname = result.nickname;
             window.localStorage.setItem('user', JSON.stringify(user));
-            navigate(`/todo/${result.nickname}`);
-          });
+            
+          }).then(()=>navigate(`/todo/`));
         } else {
           MySwal.fire('登入失敗', 'Email 或帳號輸入有誤', 'error');
         }

@@ -8,14 +8,14 @@ import List from '../component/List';
 function TodoPage() {
   const navigate = useNavigate();
   const [list, setList] = useState([]);
-  const { token, setToken, localUser } = useAuth();
-
+  const { token, setToken } = useAuth();
+  const user = JSON.parse(window.localStorage.getItem('user'));
   const getList = async () => {
     return await fetch('https://todoo.5xcamp.us/todos', {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
-        authorization: token || localUser.auth,
+        authorization: token || user.auth,
       }),
     })
       .then((res) => res.json())
@@ -31,16 +31,14 @@ function TodoPage() {
   };
 
   useEffect(() => {
-    if (!token && !localUser) {
+    if (!token && !user.auth) {
       navigate('../');
-    } else {
-      getList();
-    }
-  }, [list]);
+    } 
+  }, []);
 
   return (
     <div id="todoListPage" className="bg-half">
-      <TodoNav nickname={localUser?.nickname} handleLogOut={handleLogOut} />
+      <TodoNav nickname={user?.nickname} handleLogOut={handleLogOut} />
       <div className="conatiner todoListPage vhContainer">
         <div className="todoList_Content">
           <TodoAdd getList={getList} />
