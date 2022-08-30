@@ -92,9 +92,7 @@ function ItemFilter({list, tabState, getList}) {
   
   return (
     <ul className="todoList_item">
-      {
-        newList.map( item => <Item key={item.id} item={item} getList={getList}/>)
-      }
+      { newList.map( item => <Item key={item.id} item={item} getList={getList}/>) }
     </ul>
   )
 }
@@ -158,7 +156,11 @@ function List({ list, getList }) {
     <div className="todoList_list">
       <ListTab tabState={tabState} setTabState={setTabState}/>
       <div className="todoList_items">
-        <ItemFilter list={list} tabState={tabState} getList={getList}/>
+        {
+          list.length ? 
+            <ItemFilter list={list} tabState={tabState} getList={getList}/>:
+            <div className='Nothing'>暫無代辦項目</div>
+        }
         <div className="todoList_statistics">
           <p>{list.filter(item => !item.completed_at).length} 個待完成項目</p>
           <a href="#" onClick={e => handleDeleteCompleted(e)}>清除已完成項目</a>

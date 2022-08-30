@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useFormContext } from '../context/FormContext';
+import { useForm } from "react-hook-form";
+import { FormContext } from "../context/FormContext";
 import { useAuth } from '../context/AuthContext';
 import Logo from "../component/Logo";
 import Inputs from "../component/Inputs";
@@ -10,12 +11,12 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 function LoginPage() {
-  const { setToken } = useAuth();
-  const { handleSubmit } = useFormContext();
+  const { token, setToken } = useAuth();
+  const { register, handleSubmit, formState: { errors }} = useForm();
   const navigate = useNavigate();
   
   useEffect(() => {
-    if(window.localStorage.getItem('user')) navigate('todo');
+    if(window.localStorage.getItem('user') || token) navigate('todo');
   }, [])
 
   const onSubmitEvent = async ({ email, password }) => {
@@ -68,18 +69,20 @@ function LoginPage() {
     <div id="loginPage" className="bg-yellow">
       <div className="conatiner loginPage vhContainer ">
         <Logo />
-          <div>
-            <form 
-              className="formControls"
-              onSubmit={handleSubmit(onSubmitEvent)}  
-            >
-              <h2 className="formControls_txt">最實用的線上代辦事項服務</h2>
-              <Inputs.Email />
-              <Inputs.Password />
-              <Inputs.Submit value="登入"/>
-              <Link to="/signup" className="formControls_btnLink">註冊帳號</Link>
-            </form>    
-          </div>
+        <div>
+        <FormContext.Provider value={{register, errors}}>
+          <form 
+            className="formControls"
+            onSubmit={handleSubmit(onSubmitEvent)}  
+          >
+            <h2 className="formControls_txt">最實用的線上代辦事項服務</h2>
+            <Inputs.Email />
+            <Inputs.Password />
+            <Inputs.Submit value="登入"/>
+            <Link to="/signup" className="formControls_btnLink">註冊帳號</Link>
+          </form>    
+        </FormContext.Provider>
+        </div>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
-import { useFormContext } from '../context/FormContext';
+import { useForm } from "react-hook-form";
 import { useAuth } from '../context/AuthContext';
+import { FormContext } from "../context/FormContext";
 import Logo from "../component/Logo";
 import Inputs from "../component/Inputs";
 import Swal from 'sweetalert2';
@@ -11,7 +12,7 @@ const MySwal = withReactContent(Swal);
 function SignUpPage() {
   const navigate = useNavigate();
   const { setToken } = useAuth();
-  const { handleSubmit } = useFormContext();
+  const { register, handleSubmit, formState: { errors }} = useForm();
   
   const onSubmitEvent = ({ email, nickname, password }) => {
     const regData = { user: { email, nickname, password }}
@@ -35,7 +36,7 @@ function SignUpPage() {
         MySwal.fire({
           position: 'center',
           icon: `${result.error ? 'error' : 'success'}`,
-          title: `${result.message} `,
+          title: `${result.message} </br> ${result.error?.join() || ""}`,
           showConfirmButton: true,
         })
           .then(() => {
@@ -54,6 +55,7 @@ function SignUpPage() {
       <div className="conatiner signUpPage vhContainer">
         <Logo />
         <div>
+        <FormContext.Provider value={{register, errors}}>
           <form
             className="formControls"
             onSubmit={handleSubmit(onSubmitEvent)}
@@ -66,6 +68,7 @@ function SignUpPage() {
             <Inputs.Submit value="註冊帳號"/>
             <Link to="../" className="formControls_btnLink">登入</Link>
           </form>
+        </FormContext.Provider>
         </div>
       </div>
     </div>
