@@ -19,7 +19,7 @@ function TodoPage() {
       }),
     })
       .then((res) => res.json())
-      .then((result) => setList(result.todos))
+      .then((result) => setList(() => result.todos))
       .catch((err) => console.log(err.toString()));
   };
 
@@ -33,9 +33,11 @@ function TodoPage() {
   useEffect(() => {
     if (!token && !user.auth) {
       navigate('../');
-    } 
-  }, []);
-
+    } else {
+      getList();
+    }
+  });
+  
   return (
     <div id="todoListPage" className="bg-half">
       <TodoNav nickname={user?.nickname} handleLogOut={handleLogOut} />
