@@ -12,7 +12,7 @@ const MySwal = withReactContent(Swal);
 function SignUpPage() {
   const navigate = useNavigate();
   const { setToken } = useAuth();
-  const { register, handleSubmit, formState: { errors }} = useForm();
+  const { register, handleSubmit, formState: { errors }, reset} = useForm();
   
   const onSubmitEvent = ({ email, nickname, password }) => {
     const regData = { user: { email, nickname, password }}
@@ -47,7 +47,8 @@ function SignUpPage() {
             }
           });
       })
-      .catch(err => alert(err));
+      .catch(err => alert(err))
+      .finally(() => reset())
   };
 
   return (

@@ -12,7 +12,7 @@ const MySwal = withReactContent(Swal);
 
 function LoginPage() {
   const { token, setToken } = useAuth();
-  const { register, handleSubmit, formState: { errors }} = useForm();
+  const { register, handleSubmit, formState: { errors }, reset} = useForm();
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -62,7 +62,8 @@ function LoginPage() {
       })
         .catch(err => {
           console.log(err);
-        });
+      })
+        .finally(() => reset())
   };
 
   return (

@@ -45,15 +45,6 @@
   "homepage": "https://shin9626.github.io/react-todo-api",
   "devDependencies": {
     "@babel/core": "^7.18.13",
-    "@babel/eslint-parser": "^7.18.9",
-    "@babel/eslint-plugin": "^7.18.10",
-    "@babel/preset-react": "^7.18.6",
-    "eslint": "^8.23.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.1",
-    "eslint-plugin-react-hooks": "^4.6.0"
+    "@babel/preset-react": "^7.18.6"
   }
 }

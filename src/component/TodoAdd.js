@@ -38,6 +38,7 @@ function TodoAdd({ getList }) {
             icon: stat.current === 201 ? 'success' : 'error',
             title: stat.current === 201 ? '新增成功！' : '新增失敗！請再試一次！',
             showConfirmButton: false,
+            timer: 1000,
           })
       })
     } else {

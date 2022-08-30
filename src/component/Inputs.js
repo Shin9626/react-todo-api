@@ -1,32 +1,31 @@
-import { useState } from 'react';
-import { useFormContext } from '../context/FormContext';
+import { useState } from "react";
+import { useFormContext } from "../context/FormContext";
 
 const Inputs = {
-
   Email: () => {
     const { register, errors } = useFormContext();
     return (
       <>
         <label className="formControls_label" htmlFor="email">
-            Email
+          Email
         </label>
         <input
-            className="formControls_input"
-            type="text"
-            id="email"
-            name="email"
-            placeholder="請輸入 email"
-            {...register("email", {
-                required: { value: true, message: "此欄位必填" },
-                pattern: {
-                value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-                message: "不符合 Email 規則",
-                },
-            })}
+          className="formControls_input"
+          type="text"
+          id="email"
+          name="email"
+          placeholder="請輸入 email"
+          {...register("email", {
+            required: { value: true, message: "此欄位必填" },
+            pattern: {
+              value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
+              message: "不符合 Email 規則",
+            },
+          })}
         />
         <span>{errors.email?.message}</span>
       </>
-    )
+    );
   },
   Password: () => {
     const [password, setPassword] = useState("");
@@ -52,9 +51,9 @@ const Inputs = {
         />
         <span>{errors.password?.message}</span>
       </>
-    )
+    );
   },
-  Check: ( ) => {
+  Check: () => {
     const { register, errors } = useFormContext();
 
     return (
@@ -69,14 +68,16 @@ const Inputs = {
           id="pwd2"
           placeholder="請再次輸入密碼"
           {...register("check", {
-            validate: (e) =>  e === document.querySelector('#pwd').value ,
+            validate: (e) => e === document.querySelector("#pwd").value,
           })}
         />
-        <span>{errors.check && errors.check.type === "validate" && "密碼不一致"}</span>
+        <span>
+          {errors.check && errors.check.type === "validate" && "密碼不一致"}
+        </span>
       </>
-    )
+    );
   },
-  Nickname: ( ) => {
+  Nickname: () => {
     const { register, errors } = useFormContext();
     return (
       <>
@@ -95,17 +96,17 @@ const Inputs = {
         />
         <span>{errors.nickname?.message}</span>
       </>
-    )
+    );
   },
   Submit: ({ value }) => {
     return (
-      <input
-        className="formControls_btnSubmit"
-        type="submit"
-        value={ value }
+      <input 
+        className="formControls_btnSubmit" 
+        type="submit" 
+        value={value} 
       />
-    )
-  }
-}
+    );
+  },
+};
 
 export default Inputs;
