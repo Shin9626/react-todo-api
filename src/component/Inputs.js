@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useFormContext } from "../context/FormContext";
+import { useState } from 'react';
+import { useFormContext } from '../context/FormContext';
 
 const Inputs = {
   Email: () => {
@@ -15,11 +15,11 @@ const Inputs = {
           id="email"
           name="email"
           placeholder="請輸入 email"
-          {...register("email", {
-            required: { value: true, message: "此欄位必填" },
+          {...register('email', {
+            required: { value: true, message: '此欄位必填' },
             pattern: {
               value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g,
-              message: "不符合 Email 規則",
+              message: '不符合 Email 規則',
             },
           })}
         />
@@ -28,7 +28,6 @@ const Inputs = {
     );
   },
   Password: () => {
-    const [password, setPassword] = useState("");
     const { register, errors } = useFormContext();
 
     return (
@@ -41,12 +40,10 @@ const Inputs = {
           type="password"
           name="pwd"
           id="pwd"
-          value={password}
           placeholder="請輸入密碼"
-          {...register("password", {
-            onChange: (e) => setPassword(e.target.value),
-            required: { value: true, message: "此欄位必填" },
-            minLength: { value: 6, message: "密碼至少為 6 碼" },
+          {...register('password', {
+            required: { value: true, message: '此欄位必填' },
+            minLength: { value: 6, message: '密碼至少為 6 碼' },
           })}
         />
         <span>{errors.password?.message}</span>
@@ -67,12 +64,12 @@ const Inputs = {
           name="pwd2"
           id="pwd2"
           placeholder="請再次輸入密碼"
-          {...register("check", {
-            validate: (e) => e === document.querySelector("#pwd").value,
+          {...register('check', {
+            validate: (e) => e === document.querySelector('#pwd').value,
           })}
         />
         <span>
-          {errors.check && errors.check.type === "validate" && "密碼不一致"}
+          {errors.check && errors.check.type === 'validate' && '密碼不一致'}
         </span>
       </>
     );
@@ -90,8 +87,8 @@ const Inputs = {
           name="name"
           id="name"
           placeholder="請輸入您的暱稱"
-          {...register("nickname", {
-            required: { value: true, message: "此欄位必填" },
+          {...register('nickname', {
+            required: { value: true, message: '此欄位必填' },
           })}
         />
         <span>{errors.nickname?.message}</span>
@@ -100,11 +97,7 @@ const Inputs = {
   },
   Submit: ({ value }) => {
     return (
-      <input 
-        className="formControls_btnSubmit" 
-        type="submit" 
-        value={value} 
-      />
+      <input className="formControls_btnSubmit" type="submit" value={value} />
     );
   },
 };

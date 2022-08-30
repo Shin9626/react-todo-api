@@ -7,10 +7,11 @@ import SignUpPage from './page/SignUpPage';
 import TodoPage from './page/TodoPage';
 
 function App() {
+  const localUser = JSON.parse(window.localStorage.getItem('user'));
   const [token, setToken] = useState('');
   return (
     <div className="App">
-      <AuthContext.Provider value={{ token, setToken }}>
+      <AuthContext.Provider value={{ token, setToken, localUser }}>
         <HashRouter>
           <Routes>
             <Route index element={<LoginPage />} />

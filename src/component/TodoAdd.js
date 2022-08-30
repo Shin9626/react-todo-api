@@ -13,43 +13,43 @@ function TodoAdd({ getList }) {
     e.preventDefault();
     const content = document.querySelector('#content').value;
 
-    if(content) {
-      const body = { todo: { content } }
+    if (content) {
+      const body = { todo: { content } };
 
       fetch('https://todoo.5xcamp.us/todos', {
         method: 'POST',
         body: JSON.stringify(body),
         headers: new Headers({
           'Content-Type': 'application/json',
-          'authorization': token || user?.auth,
-        })
+          authorization: token || user?.auth,
+        }),
       })
-        .then(res => {
+        .then((res) => {
           stat.current = res.status;
-          return res.json()
-      })
-        .then(() => getList()
-      )
-        .catch(err => console.log(err.toString())
-      )
+          return res.json();
+        })
+        .then(() => getList())
+        .catch((err) => console.log(err.toString()))
         .finally(() => {
           MySwal.fire({
             position: 'center',
             icon: stat.current === 201 ? 'success' : 'error',
-            title: stat.current === 201 ? '新增成功！' : '新增失敗！請再試一次！',
+            title:
+              stat.current === 201 ? '新增成功！' : '新增失敗！請再試一次！',
             showConfirmButton: false,
             timer: 1000,
-          })
-      })
+          });
+        });
     } else {
       MySwal.fire({
         position: 'center',
         icon: 'error',
         title: '待辦事項不得為空白！',
         showConfirmButton: true,
-      })
+      });
     }
-  }
+    document.querySelector('#content').value = '';
+  };
 
   return (
     <div className="inputBox">
@@ -58,7 +58,7 @@ function TodoAdd({ getList }) {
         <i className="fa fa-plus" />
       </a>
     </div>
-  )
+  );
 }
 
 export default TodoAdd;

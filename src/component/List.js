@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useAuth } from '../context/AuthContext';
@@ -19,7 +19,7 @@ function Item({ item, getList }) {
         authorization: token || user?.auth,
       }),
     })
-      .then((res) => stat.current = res.status)
+      .then((res) => (stat.current = res.status))
       .catch((err) => console.log(err.toString()))
       .finally(() => getList());
 
@@ -87,12 +87,16 @@ function ItemFilter({ list, tabState, getList }) {
     case '已完成': {
       newList = list.filter((item) => item.completed_at);
       break;
-    } default: newList = list;
+    }
+    default:
+      newList = list;
   }
 
   return (
     <ul className="todoList_item">
-      { newList.map((item) => <Item key={item.id} item={item} getList={getList} />) }
+      {newList.map((item) => (
+        <Item key={item.id} item={item} getList={getList} />
+      ))}
     </ul>
   );
 }
@@ -106,72 +110,68 @@ function ListTab({ tabState, setTabState }) {
 
   return (
     <ul className="todoList_tab">
-      {
-        tabList.map((tab, i) => (
-          <li key={i}>
-            <a
-              href="*"
-              onClick={(e) => handleTabChange(e)}
-              className={tab === tabState ? 'active' : ''}
-            >
-              {' '}
-              {tab}
-            </a>
-          </li>
-        ))
-      }
+      {tabList.map((tab, i) => (
+        <li key={i}>
+          <a
+            href="*"
+            onClick={(e) => handleTabChange(e)}
+            className={tab === tabState ? 'active' : ''}
+          >
+            {' '}
+            {tab}
+          </a>
+        </li>
+      ))}
     </ul>
   );
 }
 
 function List({ list, getList }) {
   const { token } = useAuth();
-  const [ tabState, setTabState ] = useState('全部');
+  const [tabState, setTabState] = useState('全部');
 
-  const handleDeleteCompleted = async (e) => {
+  const handleDeleteCompleted = (e) => {
     e.preventDefault();
-    await list.filter((item) => {
-        if (item.completed_at) {
-          fetch(`https://todoo.5xcamp.us/todos/${item.id}`, {
-            method: 'DELETE',
-            headers: new Headers({
-              'Content-Type': 'application/json',
-              authorization: token || user?.auth,
-            }),
-          })
-            .then((res) => res.json()
-          )
-            .catch((err) => console.log(err.toString()));
-        }
-    })
+    const newListLength = list.filter((item) => item.completed_at).length;
+    list.filter(async (item) => {
+      if (item.completed_at) {
+        await fetch(`https://todoo.5xcamp.us/todos/${item.id}`, {
+          method: 'DELETE',
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            authorization: token || user?.auth,
+          }),
+        }).catch((err) => console.log(err.toString()));
+      } else {
+        return item;
+      }
+    });
 
     getList().then(() => {
       MySwal.fire({
         position: 'center',
-        icon: 'success',
-        title: '刪除成功',
+        icon: newListLength ? 'success' : 'question',
+        title: newListLength ? '刪除成功' : '沒有已完成的項目需要刪除',
         showConfirmButton: false,
-        timer: 1250,
+        timer: 1500,
       });
-    })   
+    });
   };
 
   return (
     <div className="todoList_list">
       <ListTab tabState={tabState} setTabState={setTabState} />
       <div className="todoList_items">
-        {
-          list.length
-            ? <ItemFilter list={list} tabState={tabState} getList={getList} />
-            : <div className="Nothing">暫無代辦項目</div>
-        }
+        {list.length ? (
+          <ItemFilter list={list} tabState={tabState} getList={getList} />
+        ) : (
+          <div className="Nothing">暫無代辦項目</div>
+        )}
         <div className="todoList_statistics">
-          <p>
-            {list.filter((item) => !item.completed_at).length}
-            {' '}
-            個待完成項目
-          </p>
-          <a href="#" onClick={(e) => handleDeleteCompleted(e)}>清除已完成項目</a>
+          <p>{list.filter((item) => !item.completed_at).length} 個待完成項目</p>
+          <a href="" onClick={(e) => handleDeleteCompleted(e)}>
+            清除已完成項目
+          </a>
         </div>
       </div>
     </div>
