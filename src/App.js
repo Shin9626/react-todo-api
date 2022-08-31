@@ -14,11 +14,12 @@ function App() {
       <AuthContext.Provider value={{ token, setToken, localUser }}>
         <HashRouter>
           <Routes>
-            <Route index element={<LoginPage />} />
+            <Route path="/" element={<LoginPage />} />
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/todo" element={<TodoPage />}>
               <Route path=":id" element={<TodoPage />} />
             </Route>
+            <Route path="*" element={<p>Page Not Found.</p>} />
           </Routes>
         </HashRouter>
       </AuthContext.Provider>

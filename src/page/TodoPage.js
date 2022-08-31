@@ -10,17 +10,19 @@ function TodoPage() {
   const [list, setList] = useState([]);
   const { token, setToken } = useAuth();
   const user = JSON.parse(window.localStorage.getItem('user'));
+
   const getList = async () => {
-    return await fetch('https://todoo.5xcamp.us/todos', {
+    console.log("get");
+      await fetch('https://todoo.5xcamp.us/todos', {
       method: 'GET',
       headers: new Headers({
         'Content-Type': 'application/json',
-        authorization: token || user.auth,
+        authorization: token || user?.auth,
       }),
     })
       .then((res) => res.json())
-      .then((result) => setList(() => result.todos))
-      .catch((err) => console.log(err.toString()));
+      .then((result) => setList(result.todos))
+      .catch((err) => console.log(err.toString()))
   };
 
   const handleLogOut = (e) => {
@@ -31,12 +33,12 @@ function TodoPage() {
   };
 
   useEffect(() => {
-    if (!token && !user.auth) {
+    if (!token && !user?.auth) {
       navigate('../');
     } else {
       getList();
     }
-  });
+  }, []);
   
   return (
     <div id="todoListPage" className="bg-half">
@@ -44,7 +46,7 @@ function TodoPage() {
       <div className="conatiner todoListPage vhContainer">
         <div className="todoList_Content">
           <TodoAdd getList={getList} />
-          <List list={list} getList={getList} />
+          <List list={list} setList={setList} getList={getList} />
         </div>
       </div>
     </div>

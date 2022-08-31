@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useAuth } from '../context/AuthContext';
@@ -130,6 +130,10 @@ function List({ list, getList }) {
   const { token } = useAuth();
   const [tabState, setTabState] = useState('全部');
 
+  useEffect(() => {
+    getList();
+  }, []);
+
   const handleDeleteCompleted = (e) => {
     e.preventDefault();
     const newListLength = list.filter((item) => item.completed_at).length;
@@ -147,15 +151,13 @@ function List({ list, getList }) {
       }
     });
 
-    getList().then(() => {
-      MySwal.fire({
-        position: 'center',
-        icon: newListLength ? 'success' : 'question',
-        title: newListLength ? '刪除成功' : '沒有已完成的項目需要刪除',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-    });
+    MySwal.fire({
+      position: 'center',
+      icon: newListLength ? 'success' : 'question',
+      title: newListLength ? '刪除成功' : '沒有已完成的項目需要刪除',
+      showConfirmButton: false,
+      timer: 1000,
+    }).then(() => getList());
   };
 
   return (
