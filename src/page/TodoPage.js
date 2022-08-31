@@ -29,7 +29,7 @@ function TodoPage() {
     e.preventDefault();
     setToken(null);
     window.localStorage.clear();
-    navigate('/');
+    navigate('../');
   };
 
   useEffect(() => {

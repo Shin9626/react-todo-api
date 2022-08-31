@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { set } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useAuth } from '../context/AuthContext';
@@ -21,7 +22,6 @@ function Item({ item, getList }) {
     })
       .then((res) => (stat.current = res.status))
       .catch((err) => console.log(err.toString()))
-      .finally(() => getList());
 
     e.target.removeAttribute('disabled');
 
@@ -33,11 +33,12 @@ function Item({ item, getList }) {
       showConfirmButton: false,
       timer: 1250,
     });
+    getList();
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = async(e) => {
     e.preventDefault();
-    fetch(`https://todoo.5xcamp.us/todos/${item.id}`, {
+    await fetch(`https://todoo.5xcamp.us/todos/${item.id}`, {
       method: 'DELETE',
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -55,7 +56,8 @@ function Item({ item, getList }) {
         });
       })
       .catch((err) => console.log(err.toString()))
-      .finally(() => getList());
+
+      getList();
   };
 
   return (
@@ -130,10 +132,6 @@ function List({ list, getList }) {
   const { token } = useAuth();
   const [tabState, setTabState] = useState('全部');
 
-  useEffect(() => {
-    getList();
-  }, []);
-
   const handleDeleteCompleted = (e) => {
     e.preventDefault();
     const newListLength = list.filter((item) => item.completed_at).length;
@@ -145,7 +143,8 @@ function List({ list, getList }) {
             'Content-Type': 'application/json',
             authorization: token || user?.auth,
           }),
-        }).catch((err) => console.log(err.toString()));
+        })
+          .catch((err) => console.log(err.toString()));
       } else {
         return item;
       }
@@ -157,7 +156,9 @@ function List({ list, getList }) {
       title: newListLength ? '刪除成功' : '沒有已完成的項目需要刪除',
       showConfirmButton: false,
       timer: 1000,
-    }).then(() => getList());
+    });
+
+    setTimeout(() => getList(), 500);
   };
 
   return (
