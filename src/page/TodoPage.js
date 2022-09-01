@@ -38,6 +38,8 @@ function TodoPage() {
     await window.localStorage.clear();
     setToken(null);
     navigate('/');
+    window.localStorage.clear();
+    navigate('../');
   };
 
   useEffect(() => {

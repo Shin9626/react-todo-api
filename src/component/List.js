@@ -20,8 +20,7 @@ function Item({ item, getList }) {
       }),
     })
       .then((res) => (stat.current = res.status))
-      .catch((err) => console.log(err.toString()))
-      .finally(() => getList());
+      .catch((err) => console.log(err.toString()));
 
     e.target.removeAttribute('disabled');
 
@@ -33,11 +32,12 @@ function Item({ item, getList }) {
       showConfirmButton: false,
       timer: 1250,
     });
+    getList();
   };
 
-  const handleDelete = (e) => {
+  const handleDelete = async (e) => {
     e.preventDefault();
-    fetch(`https://todoo.5xcamp.us/todos/${item.id}`, {
+    await fetch(`https://todoo.5xcamp.us/todos/${item.id}`, {
       method: 'DELETE',
       headers: new Headers({
         'Content-Type': 'application/json',
@@ -54,8 +54,9 @@ function Item({ item, getList }) {
           timer: 1250,
         });
       })
-      .catch((err) => console.log(err.toString()))
-      .finally(() => getList());
+      .catch((err) => console.log(err.toString()));
+
+    getList();
   };
 
   return (
@@ -153,7 +154,9 @@ function List({ list, getList }) {
       title: newListLength ? '刪除成功' : '沒有已完成的項目需要刪除',
       showConfirmButton: false,
       timer: 1000,
-    }).then(() => getList());
+    });
+
+    setTimeout(() => getList(), 500);
   };
 
   return (
