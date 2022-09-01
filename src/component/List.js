@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { useAuth } from '../context/AuthContext';
@@ -129,10 +129,6 @@ function ListTab({ tabState, setTabState }) {
 function List({ list, getList }) {
   const { token } = useAuth();
   const [tabState, setTabState] = useState('全部');
-
-  useEffect(() => {
-    getList();
-  }, []);
 
   const handleDeleteCompleted = (e) => {
     e.preventDefault();

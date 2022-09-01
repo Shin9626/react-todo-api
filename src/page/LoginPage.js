@@ -11,18 +11,18 @@ import withReactContent from 'sweetalert2-react-content';
 const MySwal = withReactContent(Swal);
 
 function LoginPage() {
-  const { token, setToken} = useAuth();
   const navigate = useNavigate();
+  const { token, setToken } = useAuth();
   const user = JSON.parse(window.localStorage.getItem('user'));
   const {
+    reset,
     register,
     handleSubmit,
     formState: { errors },
-    reset,
   } = useForm();
 
   useEffect(() => {
-    if (token || user ) navigate('todo');
+    if (token || user) navigate('todo');
   }, []);
 
   const onSubmitEvent = async ({ email, password }) => {
@@ -34,6 +34,7 @@ function LoginPage() {
       body: JSON.stringify(loginData),
       headers: new Headers({
         'Content-Type': 'application/json',
+        accept: 'application/json',
       }),
     })
       .then((res) => {
@@ -52,13 +53,14 @@ function LoginPage() {
             title: '登入成功',
             showConfirmButton: false,
             timer: 1250,
-          }).then(() => {
-            user.nickname = result.nickname;
-            window.localStorage.setItem('user', JSON.stringify(user));
-            
-          }).then(()=>navigate(`/todo/`));
+          })
+            .then(() => {
+              user.nickname = result.nickname;
+              window.localStorage.setItem('user', JSON.stringify(user));
+            })
+            .then(() => navigate(`/todo/`));
         } else {
-          MySwal.fire('登入失敗', 'Email 或帳號輸入有誤', 'error');
+          MySwal.fire('登入失敗', result.error, 'error');
         }
       })
       .catch((err) => {
