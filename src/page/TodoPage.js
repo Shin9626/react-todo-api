@@ -5,12 +5,11 @@ import TodoNav from '../component/TodoNav';
 import TodoAdd from '../component/TodoAdd';
 import List from '../component/List';
 
-const user = JSON.parse(window.localStorage.getItem('user'));
-
 function TodoPage() {
   const navigate = useNavigate();
   const [list, setList] = useState([]);
   const { token, setToken } = useAuth();
+  const user = JSON.parse(window.localStorage.getItem('user'));
 
   const getList = async () => {
     console.log('get');
